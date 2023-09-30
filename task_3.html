@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Task 3</title>
+</head>
+<body>
+    
+    <script>
+        function Distance(value, unit) {
+                if (unit === 'm' || unit === 'km' || unit === 'inch' || unit === 'feet' || unit === 'yard' || unit === 'mile') {
+                    this.value = value;
+                    this.unit = unit;
+                } else {
+                    throw new Error('Invalid unit');
+                }
+            }
+
+            Distance.prototype.converter = function (newUnit) {
+                let tempUnit = this.unit;
+                let tempValue = this.value;
+                if (newUnit === 'm' || newUnit === 'km' || newUnit === 'inch' || newUnit === 'feet' || newUnit === 'yard' || newUnit === 'mile') {
+                    if (tempUnit === newUnit) {
+                        return tempValue;
+                    } else {
+                        const units = {
+                            'm': 1,
+                            'km': 1000,
+                            'inch': 0.0254,
+                            'feet': 0.3048,
+                            'yard': 0.9144,
+                            'mile': 1609.34
+                        };
+                        const result = tempValue * (units[newUnit] / units[tempUnit]);
+                        return result;
+                    }
+                } else {
+                    throw new Error('Invalid unit');
+                }
+            };
+
+            Distance.prototype.add = function (distance) {
+                let tempUnit = this.unit;
+                let tempValue = this.value;
+                if (distance instanceof Distance) {
+                    const converted = distance.converter(tempUnit);
+                    tempValue += converted;
+                } else {
+                    throw new Error('Not a distance object');
+                }
+                this.value = tempValue;
+            };
+
+            Distance.prototype.toString = function (unit) {
+                if (unit === 'm' || unit === 'km' || unit === 'inch' || unit === 'feet' || unit === 'yard' || unit === 'mile') {
+                    const convert = this.converter(unit);
+                    return `${convert} ${unit}`;
+                } else {
+                    throw new Error('Invalid unit');
+                }
+            };
+
+            const distance = new Distance(1, Distance.METER);
+            distance.add(new Distance(1, Distance.KILOMETER));
+            distance.add(new Distance(1, Distance.INCH));
+            distance.add(new Distance(1, Distance.FEET));
+            distance.add(new Distance(1, Distance.YARD));
+            distance.add(new Distance(1, Distance.MILE));
+
+            console.log(distance.toString(Distance.METER)); // Має вивести "2612 m"
+    </script>
+</body>
+</html>

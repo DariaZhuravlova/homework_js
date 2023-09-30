@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Task 2</title>
+</head>
+<body>
+
+
+    <script>
+        // *** 1 ***
+            function Task(id, title, description) {
+                this.id = id;
+                this.title = title;
+                this.description = description;
+            }
+
+            Task.prototype.toString = function () {
+                return `${this.id} - ${this.title} - ${this.description}`;
+            };
+
+            function BlockedTask(id, title, description) {
+                Task.call(this, id, title, description);
+            }
+
+            BlockedTask.prototype = Object.create(Task.prototype);
+            BlockedTask.prototype.constructor = BlockedTask;
+            BlockedTask.prototype.toString = function () {
+                return `BLOCKED: ${Task.prototype.toString.call(this)}`;
+            };
+
+            function DeadlineTask(id, title, description, deadline) {
+                Task.call(this, id, title, description);
+                this.deadline = deadline;
+            }
+
+            DeadlineTask.prototype = Object.create(Task.prototype);
+            DeadlineTask.prototype.constructor = DeadlineTask;
+            DeadlineTask.prototype.toString = function () {
+                const deadlineString = this.deadline < Date.now() ? "DEADLINE PASSED - " : "";
+                return `${deadlineString}${Task.prototype.toString.call(this)} - ${this.deadline}`;
+            };
+
+            function TaskPrinter(tasks) {
+                this.tasks = tasks;
+            }
+
+            TaskPrinter.prototype.print = function () {
+                for (const task of this.tasks) {
+                    console.log(task.toString());
+                }
+            }
+
+            const tasks = [
+                new Task(1, "Task 1", "Description 1"),
+                new BlockedTask(2, "Blocked Task 2", "Blocked Description 2"),
+                new DeadlineTask(3, "Deadline Task 3", "Deadline Description 3", new Date(2023, 9, 30)),
+            ];
+
+            const taskPrinter = new TaskPrinter(tasks);
+            taskPrinter.print();
+
+            // *** 2 ***
+
+            function MyArray(arr) {
+                this.arr = arr;
+            }
+
+            MyArray.prototype.closest = function (number) {
+                let closestIndex = 0;
+                let closestDifference = Math.abs(number - this.arr[0]);
+
+                for (let i = 1; i < this.arr.length; i++) {
+                    const difference = Math.abs(number - this.arr[i]);
+                    if (difference < closestDifference) {
+                        closestIndex = i;
+                        closestDifference = difference;
+                    }
+                }
+
+                return closestIndex;
+            }
+
+            const array = [1, 2, 3, 5, 8, 13, 21, 34];
+            const myArray = new MyArray(array);
+            console.log(myArray.closest(5)); // 3
+            console.log(myArray.closest(10)); // 4
+            console.log(myArray.closest(100500)); // 7
+            console.log(myArray.closest(-1)); // 0
+
+    </script>
+</body>
+</html>

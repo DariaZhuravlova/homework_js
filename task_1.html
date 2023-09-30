@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Task 1</title>
+</head>
+<body>
+    
+    <script>
+        function memorize(fn) {
+                const cache = {};
+
+                return function (...args) {
+                    const key = JSON.stringify(args);
+
+                    if (!cache[key]) {
+                        console.log("Обчислення: ");
+                        const result = fn(...args);
+                        cache[key] = result;
+                        return result;
+                    } else {
+                        console.log("Взято з кешу: ");
+                        return cache[key];
+                    }
+                };
+            }
+
+            function compute(a, b) {
+                return Math.floor(Math.random() * 1_000_000) + a + b;
+            }
+
+            const computeMemorized = memorize(compute);
+
+            console.log(computeMemorized(1, 1));
+            console.log(computeMemorized(1, 2));
+            console.log(computeMemorized(1, 2));
+            console.log(computeMemorized(1, 2));
+            console.log(computeMemorized(1, 1));
+            console.log(computeMemorized(1, 1)); 
+    </script>
+</body>
+</html>
