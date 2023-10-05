@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Task 4</title>
+</head>
+
+<body>
+
+    <script>
+
+        function fetchAndDisplayRates(apiUrl, label) {
+            const fetchPromise = fetch(apiUrl)
+                .then(response => response.json());
+
+            const timeoutPromise = new Promise((resolve) => {
+                setTimeout(() => {
+                    resolve({ error: 'Час запиту вичерпано' });
+                }, 100);
+            });
+
+            return Promise.race([fetchPromise, timeoutPromise])
+                .then(data => {
+                    if (!data.error) {
+                        console.log(`Курс валют ${label}:`, data);
+                    } else {
+                        console.error(`Помилка при отриманні курсу валют від ${label}:`, data.error);
+                    }
+                })
+                .catch(error => {
+                    console.error(`Помилка при отриманні курсу валют від ${label}:`, error);
+                });
+        }
+
+        const monoBankApiUrl = 'https://api.monobank.ua/bank/currency';
+        fetchAndDisplayRates(monoBankApiUrl, 'Монобанк');
+
+        const nbuApiUrl = 'https://bank.gov.ua/NBUStatService/v1/statdirectory/exchange?json';
+        fetchAndDisplayRates(nbuApiUrl, 'НБУ');
+
+        const cryptoApiUrl = 'https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum&vs_currencies=usd';
+        fetchAndDisplayRates(cryptoApiUrl, 'CoinGecko');
+
+
+    </script>
+</body>
+
+</html>
